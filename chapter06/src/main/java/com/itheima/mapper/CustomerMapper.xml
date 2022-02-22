@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 为这个 <mapper> 指定了唯一的命名空间 -->
+<mapper namespace="com.itheima.mapper.CustomerMapper">
+    <!-- 根据客户编号获取客户信息 -->
+    <select id="findCustomerById" parameterType="Integer"
+            resultType="com.itheima.po.Customer">
+<!-- #{} 表示一个占位符，相当于 ? -->
+        select * from t_customer where id = #{id}
+    </select>
+    <!-- 根据客户名模糊查询客户信息记录 -->
+    <select id="findCustomerByName" parameterType="String"
+            resultType="com.itheima.po.Customer">
+<!-- ${} 用于拼接 SQL 的字符串，即不加解释的原样输出 ${value} 表示要拼接的简单类型参数 -->
+        select * from t_customer where username like '%${value}%'
+    </select>
+
+    <!-- 添加客户信息 -->
+    <insert id="addCustomer" parameterType="com.itheima.po.Customer">
+        insert into t_customer(username,jobs,phone)
+        values (#{username},#{jobs},#{phone})
+    </insert>
+
+    <!-- 更新客户信息 -->
+    <update id="updateCustomer" parameterType="com.itheima.po.Customer">
+        update t_customer set
+        username=#{username},jobs=#{jobs"},phone=#{phone}
+        where id=#{id}
+    </update>
+
+    <!-- 定义表的前缀名 -->
+    <sql id="tablename">
+        ${prefix}customer
+    </sql>
+    <!-- 定义要查询的表 -->
+    <sql id="someinclude">
+        from
+        <include refid="${include_target}"></include>
+    </sql>
+
+    <!-- 定义查询列 -->
+    <sql id="customerColumns">
+        id,username,jobs,phone
+    </sql>
+
+<!--    &lt;!&ndash; 根据 id 查询客户信息 &ndash;&gt;-->
+<!--    <select id="findCustomerById" parameterType="Integer"-->
+<!--            resultType="com.itheima.po.Customer">-->
+<!--        select-->
+<!--        <include refid="customerColumns"/>-->
+<!--        <include refid="someinclude">-->
+<!--            <property name="prefix" value="t_"/>-->
+<!--            <property name="include_target" value="tablename"/>-->
+<!--        </include>-->
+<!--        where id = #{id}-->
+<!--    </select>-->
+</mapper>
